@@ -196,3 +196,7 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run HKEY_CURRENT_USE
 `dir /R` => show ADS info  
 `more < test.txt:adsStream` => output stream data  
 `streams` => **Sysinternals** for ADS  
+
+# Network
+
+`sudo -E wireshark` => sudo -E  run as root but preserve Environment  
