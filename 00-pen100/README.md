@@ -132,3 +132,67 @@ _NTFS uses inheritance_ => folder permissions are propagated to child files or f
 
 `accesschk.exe "users" c:\` => from sysinternals
 
+## Win Processes
+
+_Kernel mode_ and _user mode_  
+Kernel => mostly OS with access to hardware  
+User => applications, without access to hardware  
+
+System => allways PID 4  
+System Idle Process => PID 0  
+
+`tasklist /fi "name eq cmd.exe"` => /fi filter or use `| find <name>`  
+`wmic process get processid,parentprocessid,executablepath` => get pid with parent  
+
+Sysinternals:  
+`pslist` => **-t tree like**, **-d threads**
+`pskill`  
+`pssuspend` => "pause" procees, `pssuspend -r` resume (_Name=all instances_, _PID=specific process_)  
+
+`listdlls` => list process which calls dlls, **-u only usigned dlls**  
+
+## Dlls
+same format as .exe to reuse code  
+on 64bit system, 64dlls C:\Windows\System32, SysWOW64 = 32bit  
+
+## Registry
+
+`HKEY_CLASSES_ROOT (HKCR)` =>  information related to file types and properties  
+`HKEY_CURRENT_CONFIG (HKCC)` => hardware information  
+`HKEY_CURRENT_USER (HKCU)` => user specific information  
+`HKEY_LOCAL_MACHINE` => machine information, like memory, drives, I/O devices  
+`HKEY_USERS` => default settings for new users    
+
+**_Run_ and _RunOnce_** => getting executed if user logs in (RunOnce,gets deleted after start)  
+<u>Default locations</u>
+
+```
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
+```
+`req query hkcu\Software\Microsoft\Windows\CurrentVersion\Run` => query Reg  
+`reg delete hkcu\software\microsoft\windows\currentversion\run /va` => delete ALL values  
+`reg add hkcu\software\microsoft\windows\currentversion\run /v OneDrive /t REG_SZ /d "C:\Users\Offsec\AppData\Local\Microsoft\OneDrive\OneDrive.exe"` => add value, **/v value name**, **/t Type**, REG_SZ=null terminated String, **/d data**  
+
+`reg export hkcu\test testfile` => export key or hive to file (hex data)  
+`reg import <filename>`=> import previously exported data    
+
+
+## Scheduled tasks
+
+`schtasks` => list  
+`C:\>schtasks /create /sc weekly /d mon /tn hax0r /tr C:\hacked.exe /st 10:00` => run hacked.exe every mondy at 10:00  
+`schtasks /delete /tn hax0r` => delete task hax0r  
+`C:\>schtasks /query /TN hax0r /fo LIST` => query task hx0r, output format=list  
+
+## Disk utils and ADS
+
+`fsutil` => disk information  
+`du` (Sysinternals) => like linux  
+
+
+`echo 123 > test.txt:adsStream` => write to ads  
+`dir /R` => show ADS info  
+`more < test.txt:adsStream` => output stream data  
+`streams` => **Sysinternals** for ADS  
